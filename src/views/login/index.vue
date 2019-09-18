@@ -17,7 +17,7 @@
                  <el-input v-model="loginForm.code" style="width:64%" placeholder="请输入验证码"></el-input>
                  <el-button style="margin-left:20px">发送验证码</el-button>
              </el-form-item>
-             <el-form-item prop="agree" style="margin-bottom:10px">
+             <el-form-item prop="agree">
                  <el-checkbox v-model="loginForm.agree">我已阅读并同意用户协议和隐私条款</el-checkbox>
              </el-form-item>
              <!-- 登录按钮 -->
@@ -33,25 +33,47 @@
 <script>
 export default {
   data () {
+    // value ? callBack():callBack(new Error('您必须同意该协议'))
     return {
       loginForm: {
         mobile: '',
         code: '',
-        agree: false
+        agree: false // 是否同意协议
       },
-      //   登录规则几何对象
+      //   登录规则校验对象
       loginRules: {
         //   决定着校验规则 key(字段名)：value(对象数组)
         // required: true,该字段必填，如果不填，就会提示消息
         mobile: [{
           required: true,
           message: '请输入您的手机号'
-        }],
+        }, {
+          // 验证手机号是否正确
+          pattern: /^1[3456789]\d{9}$/,
+          message: '请输入正确的手机号'
+        }
+        ],
         code: [{
           required: true,
           message: '请输入您的验证码'
-        }],
-        agree: [{}]
+        },
+        // 校验验证码是否是6位
+        {
+          pattern: /^\d{6}$/,
+          message: '请输入正确的验证码'
+        }
+        ],
+        // 校验协议是否勾选
+        agree: [{ validator: function (rule, value, callBack) {
+          if (value) {
+            // 正确，勾选协议
+            callBack()
+          } else {
+            // 不对，没有勾选协议
+            callBack(new Error('您必须同意该协议'))
+          }
+        } }
+        ]
       }
     }
   },
@@ -89,8 +111,5 @@ export default {
             }
         }
     }
-}
-.login-card{
-
 }
 </style>
