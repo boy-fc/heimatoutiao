@@ -90,8 +90,12 @@ export default {
           }).then(result => {
             window.localStorage.setItem('user-token', result.data.data.token)
             this.$router.push('/home')
-          }).catch(error => {
-            console.log(error.message)
+          }).catch(() => {
+            // 提示消息
+            this.$message({
+              type: 'warning',
+              message: '您的手机号或者验证码错误'
+            })
           })
         }
       })
