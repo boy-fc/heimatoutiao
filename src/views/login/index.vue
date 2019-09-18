@@ -1,13 +1,96 @@
 <template>
-  <div>我是登录</div>
+  <div class="login">
+      <!-- 引入和使用elementui组件，el-card -->
+     <el-card class="login-card">
+         <!-- 匿名插槽 -->
+         <div class="title">
+             <img src="../../assets/img/logo_index.png" alt="">
+         </div>
+         <!-- 表单  el-form -->
+         <el-form ref="myform" :model="loginForm" :rules="loginRules" style="margin-top: 15px;padding:0 15px">
+             <!-- 输入手机号 -->
+             <el-form-item prop="mobile">
+                 <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
+             </el-form-item>
+             <!-- 发送验证码 -->
+             <el-form-item prop="code" style="margin-bottom:10px">
+                 <el-input v-model="loginForm.code" style="width:64%" placeholder="请输入验证码"></el-input>
+                 <el-button style="margin-left:20px">发送验证码</el-button>
+             </el-form-item>
+             <el-form-item prop="agree" style="margin-bottom:10px">
+                 <el-checkbox v-model="loginForm.agree">我已阅读并同意用户协议和隐私条款</el-checkbox>
+             </el-form-item>
+             <!-- 登录按钮 -->
+             <el-form-item>
+                 <el-button @click="login" style="width:100%" type="primary">登录</el-button>
+             </el-form-item>
+         </el-form>
+     </el-card>
+  </div>
+
 </template>
 
 <script>
 export default {
-
+  data () {
+    return {
+      loginForm: {
+        mobile: '',
+        code: '',
+        agree: false
+      },
+      //   登录规则几何对象
+      loginRules: {
+        //   决定着校验规则 key(字段名)：value(对象数组)
+        // required: true,该字段必填，如果不填，就会提示消息
+        mobile: [{
+          required: true,
+          message: '请输入您的手机号'
+        }],
+        code: [{
+          required: true,
+          message: '请输入您的验证码'
+        }],
+        agree: [{}]
+      }
+    }
+  },
+  methods: {
+    login () {
+      // 校验整个表单的规则
+      // validate是一个方法，方法传入一个函数,2个参数，是否校验成功/未效验成功的字段
+      this.$refs.myform.validate(function (isOK) {
+        if (isOK) {
+          console.log('校验成功')
+        }
+      })
+    }
+  }
 }
 </script>
 
-<style>
+<style lang="less" scoped>
+// 如果在组件样式中写less,就要给一个lang属性 lang=less
+// 如果加了scoped属性，style只对当前html起作用
+.login {
+    background-image: url('../../assets/img/login_bg.jpg');
+    height: 100vh;
+    background-size:cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .login-card{
+        width: 440px;
+        height: 310px;
+        .title{
+            text-align: center;
+            img{
+                width: 160px;
+            }
+        }
+    }
+}
+.login-card{
 
+}
 </style>
