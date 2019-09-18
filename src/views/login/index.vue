@@ -81,9 +81,18 @@ export default {
     login () {
       // 校验整个表单的规则
       // validate是一个方法，方法传入一个函数,2个参数，是否校验成功/未效验成功的字段
-      this.$refs.myform.validate(function (isOK) {
+      this.$refs.myform.validate((isOK) => {
         if (isOK) {
-          console.log('校验成功')
+          this.$axios({
+            method: 'post',
+            url: '/authorizations',
+            data: this.loginForm
+          }).then(result => {
+            window.localStorage.setItem('user-token', result.data.data.token)
+            this.$router.push('/home')
+          }).catch(error => {
+            console.log(error.message)
+          })
         }
       })
     }
