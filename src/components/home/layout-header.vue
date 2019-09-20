@@ -36,12 +36,11 @@ export default {
     // 接口函数
     getUserInfo () {
       // 从缓冲中取出token令牌
-      let token = window.localStorage.getItem('user-token')
+      // let token = window.localStorage.getItem('user-token')
       // 发送接口请求
       this.$axios({
-        url: '/user/profile',
-        method: 'get',
-        headers: { 'Authorization': `Bearer ${token}` }
+        url: '/user/profile'
+        // headers: { 'Authorization': `Bearer ${token}` }
       }).then(result => {
         this.userInfo = result.data.data
       })
