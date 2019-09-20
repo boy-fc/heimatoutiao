@@ -7,7 +7,7 @@
                 </el-col>
                 <!-- 头部右侧 -->
                 <el-col :span="3" class="right">
-                  <el-dropdown trigger="click">
+                  <el-dropdown trigger="click" @command="commonClick">
                       <!-- 匿名插槽 -->
                     <span class="el-dropdown-link">
                       <img class='head-img' :src="userInfo.photo?userInfo.photo:defaultImg " alt="">
@@ -15,9 +15,9 @@
                     </span>
                     <!-- 具名插槽 -->
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item >个人信息</el-dropdown-item>
-                      <el-dropdown-item>git地址</el-dropdown-item>
-                      <el-dropdown-item>退出</el-dropdown-item>
+                      <el-dropdown-item command='account'>个人信息</el-dropdown-item>
+                      <el-dropdown-item command='git'>git地址</el-dropdown-item>
+                      <el-dropdown-item command='exit'>退出</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                 </el-col>
@@ -45,6 +45,17 @@ export default {
       }).then(result => {
         this.userInfo = result.data.data
       })
+    },
+    // 退出登录
+    commonClick (key) {
+      if (key === 'account') {
+        // 账号信息
+      } else if (key === 'git') {
+        window.location.href = 'https://github.com/boy-fc/heimatoutiao'
+      } else {
+        window.localStorage.clear()
+        this.$router.push('/login')
+      }
     }
   },
   // 钩子函数
