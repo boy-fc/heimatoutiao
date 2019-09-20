@@ -21,13 +21,8 @@
 </template>
 
 <script>
-import layoutHeader from '../../components/home/layout-header'
-import layoutAsile from '../../components/home/layout-asile'
+
 export default {
-  components: {
-    'layout-header': layoutHeader,
-    'layout-asile': layoutAsile
-  }
 }
 </script>
 
