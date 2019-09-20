@@ -49,7 +49,7 @@ export default {
     // 退出登录
     commonClick (key) {
       if (key === 'account') {
-        // 账号信息
+        this.$router.push('/home/account')
       } else if (key === 'git') {
         window.location.href = 'https://github.com/boy-fc/heimatoutiao'
       } else {
