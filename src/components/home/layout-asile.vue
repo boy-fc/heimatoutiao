@@ -43,7 +43,7 @@
       </el-menu-item>
 
     </el-menu>
-            </div>
+   </div>
 </template>
 
 <script>
@@ -54,8 +54,9 @@ export default {
 
 <style lang='less' scoped>
 .left-side {
+    overflow: hidden;
     width: 200px;
-    height: 100vh;
+    height: 100%;
     background-color: #323745;
     .logo{
         height: 60px;
