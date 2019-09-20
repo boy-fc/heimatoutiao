@@ -42,7 +42,7 @@ export default {
         url: '/user/profile'
         // headers: { 'Authorization': `Bearer ${token}` }
       }).then(result => {
-        this.userInfo = result.data.data
+        this.userInfo = result.data
       })
     },
     // 退出登录
