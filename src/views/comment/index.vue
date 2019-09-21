@@ -15,7 +15,7 @@
                 <!-- element-会自己管理注册作用域插槽 -->
                 <template slot-scope="obj">
                     <el-button type="text" size="small">修改</el-button>
-                    <el-button type="text" size="small" @click="closeOrOpen(obj.row)">
+                    <el-button type="text" size="small" @click="closeOrOpen(obj.row)" :style="{color: obj.row.comment_status ? 'red' : '#409EFF' }" >
                     {{
                          obj.row.comment_status ? "关闭评论" : '打开评论'
                     }}
@@ -42,8 +42,8 @@ export default {
         this.$axios({
           url: 'comments/status',
           method: 'put',
-          params: { article_id: row.id }, // 路径参数
-          header: { allow_comment: !row.comment_status }
+          params: { article_id: row.id.toString() }, // 路径参数
+          data: { allow_comment: !row.comment_status }
         }).then(() => {
           this.getComment()
         })

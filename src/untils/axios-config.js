@@ -1,8 +1,14 @@
 // 负责对axios进行处理
 import axios from 'axios'
 import { Message } from 'element-ui'
+import jsonBig from 'json-bigint'
 
 import router from '../permisson'
+
+// 大数字类型处理
+axios.defaults.transformResponse = [function (data) {
+  return jsonBig.parse(data) // 换了一个转化方法 使得 计算更精确 保证id不失真
+}]
 
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 将地址的常态值设置给baseUrl
 // 请求拦截
