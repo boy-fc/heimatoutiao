@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from './views/home/index'
 import Login from './views/login/index'
 import Main from './views/home/main'
-
+import Comment from './views/comment'
 Vue.use(Router)
 
 export default new Router({
@@ -19,6 +19,11 @@ export default new Router({
         {
           path: '',
           component: Main
+        },
+        // 评论列表
+        {
+          path: 'comment',
+          component: Comment
         }
       ]
     },
