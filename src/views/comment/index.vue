@@ -5,7 +5,7 @@
             <template slot="title">评论列表</template>
         </bread-crumb>
         <!-- 表格列表 -->
-        <el-table :data="tableData">
+        <el-table :data="tableData" v-loading="loading">
             <el-table-column label="标题" prop="title" width="600px"></el-table-column>
             <el-table-column align="center" label="评论状态" prop="comment_status" :formatter='stateFormatter'></el-table-column>
             <el-table-column align="center" label="总评论数" prop="total_comment_count"></el-table-column>
@@ -43,7 +43,8 @@ export default {
         total: 0, // 总条数
         currentPage: 1, // 默认第一页
         pageSize: 10 // 每页多少条
-      }
+      },
+      loading: false
     }
   },
   methods: {
@@ -73,6 +74,7 @@ export default {
 
     //   获取数据列表
     getComment () {
+      this.loading = true
       this.$axios({
         url: '/articles',
         // params 是路径参数也就是 query参数
@@ -80,6 +82,7 @@ export default {
       }).then(result => {
         this.tableData = result.data.results
         this.page.total = result.data.total_count // 把总条数给分页组件的总条数
+        this.loading = false
       })
     }
   },
