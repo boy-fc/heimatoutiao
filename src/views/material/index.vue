@@ -2,8 +2,12 @@
   <el-card>
     <!-- 面包屑组件 -->
         <bread-crumb slot="header">
-            <template slot="title">素材列表</template>
+            <template slot="title">素材管理</template>
         </bread-crumb>
+        <!-- http-request 自定义上传 -->
+        <el-upload :show-file-list="false" :http-request="uploadImg" action="" class='too-difficult'>
+          <el-button type='primary'>上传素材</el-button>
+       </el-upload>
     <!-- 标签 ------------------------------------------------------------------>
     <el-tabs v-model="activeName" @tab-click="getMaterial">
       <el-tab-pane label="全部素材" name="all">
@@ -50,6 +54,18 @@ export default {
     }
   },
   methods: {
+    // 上传图片
+    uploadImg (params) {
+      const data = new FormData() // 声明一个新的表单
+      data.append('image', params.file)
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data: data
+      }).then(() => {
+        this.getMaterial()
+      })
+    },
     // 分页按钮
     changeCurrent (newpage) {
       this.page.page_current = newpage
@@ -75,6 +91,11 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.too-difficult {
+  position: absolute;
+  right:20px;
+  margin-top:-10px;
+}
 .img-list{
   display: flex;
   flex-wrap: wrap;
