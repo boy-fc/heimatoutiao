@@ -3,8 +3,7 @@ import Router from 'vue-router'
 import Home from './views/home/index'
 import Login from './views/login/index'
 import Main from './views/home/main'
-import Comment from './views/comment'
-import Material from './views/material'
+
 Vue.use(Router)
 
 export default new Router({
@@ -24,12 +23,12 @@ export default new Router({
         // 评论列表
         {
           path: 'comment',
-          component: Comment
+          component: () => import('./views/comment')
         },
         // 素材列表
         {
           path: 'material',
-          component: Material
+          component: () => import('./views/material')
         }
       ]
     },

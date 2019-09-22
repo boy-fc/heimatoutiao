@@ -1,4 +1,4 @@
-<template>
+<template class='left'>
    <div class="left-side">
                 <!-- logo文件设置 -->
                 <div class="logo" style="padding:10px">
@@ -53,10 +53,14 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.left {
+  background-color: #323745;
+  height: 100%;
+}
 .left-side {
     overflow: hidden;
     width: 200px;
-    height: 100%;
+    height: 100vh;
     background-color: #323745;
     .logo{
         height: 60px;
