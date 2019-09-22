@@ -1,11 +1,11 @@
 <template>
-  <el-card>
+  <el-card style="pos">
     <!-- 面包屑组件 -->
         <bread-crumb slot="header">
             <template slot="title">素材管理</template>
         </bread-crumb>
         <!-- http-request 自定义上传 -->
-        <el-upload :show-file-list="false" :http-request="uploadImg" action="" class='too-difficult'>
+        <el-upload :show-file-list="false" :http-request="uploadImg" action="" class='pos'>
           <el-button type='primary'>上传素材</el-button>
        </el-upload>
     <!-- 标签 ------------------------------------------------------------------>
@@ -91,10 +91,11 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.too-difficult {
+.pos {
   position: absolute;
   right:20px;
   margin-top:-10px;
+  z-index: 1
 }
 .img-list{
   display: flex;
