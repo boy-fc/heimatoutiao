@@ -23,6 +23,12 @@
                 </template>
             </el-table-column>
         </el-table>
+        <!-- 分页结构 -->
+        <el-row class="page">
+          <el-pagination background layout="prev, pager, next" @current-change='changePage'
+          :total='page.total' :current-page="page.currentPage" :page-size="page.pageSize">
+          </el-pagination>
+        </el-row>
     </el-card>
 
 </template>
@@ -31,10 +37,21 @@
 export default {
   data () {
     return {
-      tableData: []
+      tableData: [],
+      // 分页信息
+      page: {
+        total: 0, // 总条数
+        currentPage: 1, // 默认第一页
+        pageSize: 10 // 每页多少条
+      }
     }
   },
   methods: {
+    // 分页改变事件
+    changePage (newPage) {
+      this.page.currentPage = newPage // 更新最新页码给 currernpage
+      this.getComment()
+    },
     //   评论打开或者关闭事件
     closeOrOpen (row) {
       let mess = row.comment_status ? '关闭' : '打开'
@@ -59,9 +76,10 @@ export default {
       this.$axios({
         url: '/articles',
         // params 是路径参数也就是 query参数
-        params: { response_type: 'comment' }
+        params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
       }).then(result => {
         this.tableData = result.data.results
+        this.page.total = result.data.total_count // 把总条数给分页组件的总条数
       })
     }
   },
@@ -72,5 +90,8 @@ export default {
 </script>
 
 <style>
-
+.page{
+  text-align: center;
+  margin: 20px 0;
+}
 </style>
