@@ -4,7 +4,7 @@
         <bread-crumb slot="header">
             <template slot="title">素材列表</template>
         </bread-crumb>
-    <!-- 标签 -->
+    <!-- 标签 ------------------------------------------------------------------>
     <el-tabs v-model="activeName" @tab-click="getMaterial">
       <el-tab-pane label="全部素材" name="all">
         <div class="img-list">
@@ -29,6 +29,10 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+    <!-- 分页---------------------------------------------------------------------- -->
+    <el-pagination background layout="prev, pager, next" class="tag" @current-change='changeCurrent'
+     :total="page.total" :current-page='page.page_current' :page-size='page.pagesizes'>
+    </el-pagination>
   </el-card>
 </template>
 
@@ -37,19 +41,30 @@ export default {
   data () {
     return {
       activeName: 'all', // 默认选中全部
-      list: []
+      list: [],
+      page: {
+        total: 0,
+        page_current: 1,
+        pagesizes: 12
+      }
     }
   },
   methods: {
+    // 分页按钮
+    changeCurrent (newpage) {
+      this.page.page_current = newpage
+      this.getMaterial()
+    },
     //   获取素材列表
     getMaterial () {
       // this.activeName === 'collect' 相当于去找收藏的数据
       // 如果不等于collect 相等于去找全部的数据
       this.$axios({
         url: '/user/images',
-        params: { collect: this.activeName === 'collect' }
+        params: { collect: this.activeName === 'collect', page: this.page.page_current, per_page: this.page.pagesizes }
       }).then(result => {
         this.list = result.data.results
+        this.page.total = result.data.total_count
       })
     }
   },
@@ -89,5 +104,9 @@ export default {
       }
 }
   }
+}
+.tag{
+  text-align: center;
+  margin: 20px 0;
 }
 </style>
