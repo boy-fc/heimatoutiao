@@ -4,6 +4,7 @@ import Home from './views/home/index'
 import Login from './views/login/index'
 import Main from './views/home/main'
 import Comment from './views/comment'
+import Material from './views/material'
 Vue.use(Router)
 
 export default new Router({
@@ -24,6 +25,11 @@ export default new Router({
         {
           path: 'comment',
           component: Comment
+        },
+        // 素材列表
+        {
+          path: 'material',
+          component: Material
         }
       ]
     },
