@@ -1,5 +1,5 @@
 <template>
-  <el-card style="pos">
+  <el-card style="pos" v-loading='loading'>
     <!-- 面包屑组件 -->
         <bread-crumb slot="header">
             <template slot="title">素材管理</template>
@@ -17,8 +17,8 @@
             <img :src="item.url" alt="" >
           <!-- 小标签 -->
             <div class='operate'>
-              <i :style='{color: item.is_collected ? "red" : "#000"}' class='el-icon-star-on'></i>
-              <i class='el-icon-delete-solid'></i>
+              <i @click="collectPic(item)" :style='{color: item.is_collected ? "red" : "#000"}' class='el-icon-star-on'></i>
+              <i @click="deletePic(item.id)" class='el-icon-delete-solid'></i>
             </div>
           </el-card>
         </div>
@@ -50,11 +50,41 @@ export default {
         total: 0,
         page_current: 1,
         pagesizes: 12
-      }
+      },
+      loading: false
     }
   },
   methods: {
-    // 上传图片
+    // 收藏图片------------------------------------------------
+    collectPic (item) {
+      let mess = item.is_collected ? '取消' : ''
+      this.$confirm(`您确定要${mess}收藏该图片？`).then(() => {
+        this.loading = true
+        this.$axios({
+          url: `/user/images/${item.id}`,
+          method: 'put',
+          data: { collect: !item.is_collected }
+        }).then(() => {
+          this.getMaterial()
+          this.loading = false
+        })
+      })
+    },
+    // 删除图片--------------------------------------------
+    deletePic (id) {
+      this.$confirm('您确定要删除该图片吗？').then(() => {
+        // 如果点击确定，调用删除接口
+        this.loading = true
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        }).then(() => {
+          this.getMaterial()
+          this.loading = false
+        })
+      })
+    },
+    // 上传图片-------------------------------------------------
     uploadImg (params) {
       const data = new FormData() // 声明一个新的表单
       data.append('image', params.file)

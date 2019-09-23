@@ -29,6 +29,16 @@ export default new Router({
         {
           path: 'material',
           component: () => import('./views/material')
+        },
+        // 内容列表
+        {
+          path: 'articles',
+          component: () => import('./views/articles')
+        },
+        // 发表文章
+        {
+          path: 'publish',
+          component: () => import('./views/publish')
         }
       ]
     },
