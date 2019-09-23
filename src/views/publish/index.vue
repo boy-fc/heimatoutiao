@@ -26,7 +26,9 @@
             </el-form-item>
             <!-- 频道选择 -->
             <el-form-item label="频道">
-                <el-select></el-select>
+                <el-select>
+                    <el-option v-for="item in channels" :key="item.id" :value="item.id" :label="item.name"></el-option>
+                </el-select>
             </el-form-item>
             <!-- 底部 -->
             <el-form-item>
@@ -39,7 +41,24 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      channels: []
+    }
+  },
+  methods: {
+    //   获取频道数据
+    getChannels () {
+      this.$axios({
+        url: '/channels'
+      }).then(result => {
+        this.channels = result.data.channels // 获取channels频道
+      })
+    }
+  },
+  created () {
+    this.getChannels()
+  }
 }
 </script>
 
