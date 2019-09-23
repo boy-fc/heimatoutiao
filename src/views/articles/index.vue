@@ -31,26 +31,20 @@
         <!-- 总条数预览 -->
         <div class="total">共找到55078条符合条件的内容</div>
         <!-- 文章列表 -->
-        <div class="container">
+        <div class="container" v-for="item in list" :key="item.id">
             <!-- 左侧内容 -->
             <div class="left">
-                 <img src="../../assets/img/404.png" alt="">
+                 <img :src="item.cover.images.length? item.cover.images[0]: defaultImg" alt="">
                  <div class="info">
-                     <span>我一直在看着你</span>
-                     <el-tag class="tag">已发表</el-tag>
-                     <span>2019-09-23 15:30:23</span>
+                     <span>{{item.title}}</span>
+                     <el-tag class="tag" :type="item.status|statusType">{{item.status|statusText}}</el-tag>
+                     <span>{{item.pubdate}}</span>
                  </div>
             </div>
             <!-- 右侧内容 -->
             <div class="right">
-                <span>
-                    <i class="el-icon-edit"></i>
-                    修改
-                </span>
-                <span class="del">
-                    <i class="el-icon-delete"></i>
-                    删除
-                </span>
+                <span><i class="el-icon-edit"></i>修改</span>
+                <span class="del"><i class="el-icon-delete"></i>删除</span>
             </div>
         </div>
     </el-card>
@@ -58,7 +52,59 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      defaultImg: require('../../assets/img/login_bg.jpg'), // 默认图片
+      list: [] // 文章列表
+    }
+  },
+  methods: {
+    //   获取文章列表----------------------------------------------------------
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(result => {
+        this.list = result.data.results
+      })
+    }
+  },
+  //   钩子函数-----------------------------------------------------------------
+  created () {
+    this.getArticles()
+  },
+  //   过滤器
+  filters: {
+    //   过滤文本内容
+    statusText (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+        case 4:
+          return '已删除'
+      }
+    },
+    // 过滤文本框颜色
+    statusType (value) {
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'warning'
+        case 2:
+          return 'success'
+        case 3:
+          return 'danger'
+        case 4:
+          return 'danger'
+      }
+    }
+  }
 }
 </script>
 
@@ -94,7 +140,8 @@ export default {
                 font-size: 14px;
             }
             .tag{
-                width: 60px
+                width: 60px;
+                text-align: center;
             }
             span:nth-child(3){
                 font-size: 13px;
