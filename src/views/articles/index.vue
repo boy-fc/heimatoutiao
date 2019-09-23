@@ -9,21 +9,25 @@
         <el-form style="margin-left: 50px">
             <!-- 文章状态 -->
             <el-form-item label="文章状态：">
-                <el-radio-group>
-                    <el-radio>全部</el-radio>
-                    <el-radio>草稿</el-radio>
-                    <el-radio>待审核</el-radio>
-                    <el-radio>审核通过</el-radio>
-                    <el-radio>审核失败</el-radio>
+                <el-radio-group v-model="formData.status" @change="changeCondition">
+                    <el-radio :label="5">全部</el-radio>
+                    <el-radio :label="0">草稿</el-radio>
+                    <el-radio :label="1">待审核</el-radio>
+                    <el-radio :label="2">审核通过</el-radio>
+                    <el-radio :label="3">审核失败</el-radio>
                 </el-radio-group>
             </el-form-item>
             <!-- 频道列表 -->
             <el-form-item label="频道列表：">
-                <el-select ></el-select>
+                <el-select v-model="formData.channel_id" @change="changeCondition">
+                    <!-- 循环获得频道名字 :value绑定值 :label绑定 分组的组名 -->
+                    <el-option v-for="item in channels" :key="item.id" :value="item.id" :label="item.name"></el-option>
+                </el-select>
             </el-form-item>
             <!-- 时间选择 -->
             <el-form-item label="时间选择：">
-                <el-date-picker type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期">
+                <!-- 使用format指定输入框的格式；使用value-format指定绑定值的格式。 -->
+                <el-date-picker @change="changeCondition" value-format="yyyy-MM-dd" v-model='formData.date' type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期">
                 </el-date-picker>
             </el-form-item>
         </el-form>
@@ -34,12 +38,12 @@
         <div class="container" v-for="item in list" :key="item.id">
             <!-- 左侧内容 -->
             <div class="left">
-                 <img :src="item.cover.images.length? item.cover.images[0]: defaultImg" alt="">
-                 <div class="info">
-                     <span>{{item.title}}</span>
-                     <el-tag class="tag" :type="item.status|statusType">{{item.status|statusText}}</el-tag>
-                     <span>{{item.pubdate}}</span>
-                 </div>
+                <img :src="item.cover.images.length? item.cover.images[0]: defaultImg" alt="">
+                <div class="info">
+                    <span>{{item.title}}</span>
+                    <el-tag class="tag" :type="item.status|statusType">{{item.status|statusText}}</el-tag>
+                    <span>{{item.pubdate}}</span>
+                </div>
             </div>
             <!-- 右侧内容 -->
             <div class="right">
@@ -54,15 +58,44 @@
 export default {
   data () {
     return {
+      // 表单数据
+      formData: {
+        status: 5, // 文章状态 0-草稿，1-待审核，2-审核通过，3-审核失败，4-已删除
+        channel_id: null, // 频道id
+        date: []
+      },
       defaultImg: require('../../assets/img/login_bg.jpg'), // 默认图片
-      list: [] // 文章列表
+      list: [], // 文章列表
+      channels: [] // 定义一个频道数组
     }
   },
   methods: {
-    //   获取文章列表----------------------------------------------------------
-    getArticles () {
+    // 搜索时状态改变事件
+    changeCondition () {
+      // 因为值改变时 formdata已经是最新的值 所以直接可以用formData的值请求
+      // 组装请求参数
+      let params = {
+        status: this.formData.status === 5 ? null : this.formData.status, // 状态  如果为5时，就是全部，但是接口要求全部不传内容 null就相当于什么都没传
+        channel_id: this.formData.channel_id, // 频道id
+        begin_pubdate: this.formData.date.length ? this.formData.date[0] : null,
+        end_pubdate: this.formData.date.length > 1 ? this.formData.date[1] : null // 结束时间
+      }
+      //   调用获取文章的接口
+      this.getArticles(params)
+    },
+    // 获取频道选择器数据------------------------------------------------------
+    getChannels () {
       this.$axios({
-        url: '/articles'
+        url: '/channels'
+      }).then(result => {
+        this.channels = result.data.channels
+      })
+    },
+    //   获取文章列表----------------------------------------------------------
+    getArticles (params) {
+      this.$axios({
+        url: '/articles',
+        params
       }).then(result => {
         this.list = result.data.results
       })
@@ -71,6 +104,7 @@ export default {
   //   钩子函数-----------------------------------------------------------------
   created () {
     this.getArticles()
+    this.getChannels()
   },
   //   过滤器
   filters: {
