@@ -57,7 +57,7 @@
         <span>
           <i class="el-icon-edit"></i>修改
         </span>
-        <span class="del">
+        <span class="del"  @click="delArticles(item.id)">
           <i class="el-icon-delete"></i>删除
         </span>
       </div>
@@ -97,6 +97,19 @@ export default {
     }
   },
   methods: {
+    //   删除事件------------------------
+    delArticles (id) {
+      this.$confirm('您确定要删除此文章吗').then(() => {
+        // id超过了安全数字限制 被jsonbigint转成了bigNUmber类型 要想变成字符串
+        // id.toString()
+        this.$axios({
+          url: `/articles/${id.toString()}`,
+          method: 'delete'
+        }).then(() => {
+          this.queryArticles() // 带条件的查询
+        })
+      })
+    },
     //   分页改变事件
     changePage (newPage) {
       this.page.currentPage = newPage
@@ -228,6 +241,7 @@ export default {
     font-size: 14px;
     .del {
       margin-left: 20px;
+      cursor: pointer;
     }
   }
 }
