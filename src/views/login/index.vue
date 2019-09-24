@@ -118,6 +118,7 @@ export default {
         width: 440px;
         height: 310px;
         .title{
+          background-color: #fff;
             text-align: center;
             img{
                 width: 160px;
