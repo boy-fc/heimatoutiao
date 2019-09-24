@@ -54,7 +54,7 @@
       </div>
       <!-- 右侧内容 -->
       <div class="right">
-        <span>
+        <span @click="goEdit(item.id)" class="edit">
           <i class="el-icon-edit"></i>修改
         </span>
         <span class="del"  @click="delArticles(item.id)">
@@ -97,6 +97,10 @@ export default {
     }
   },
   methods: {
+    // 跳转到修改编辑页面
+    goEdit (id) {
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
     //   删除事件------------------------
     delArticles (id) {
       this.$confirm('您确定要删除此文章吗').then(() => {
@@ -239,6 +243,9 @@ export default {
   }
   .right {
     font-size: 14px;
+    .edit{
+      cursor: pointer;
+    }
     .del {
       margin-left: 20px;
       cursor: pointer;

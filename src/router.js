@@ -35,6 +35,11 @@ export default new Router({
           path: 'articles',
           component: () => import('./views/articles')
         },
+        // 跳转到编辑页面
+        {
+          path: 'publish/:articlesId',
+          component: () => import('./views/publish')
+        },
         // 发表文章
         {
           path: 'publish',
