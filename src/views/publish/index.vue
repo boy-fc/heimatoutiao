@@ -32,8 +32,8 @@
             </el-form-item>
             <!-- 底部 -->
             <el-form-item>
-                <el-button type='primary' @click="publish(true)">发布文章</el-button>
-                <el-button @click="publish(false)">存入草稿</el-button>
+                <el-button type='primary' @click="publish(false)">发布文章</el-button>
+                <el-button @click="publish(true)">存入草稿</el-button>
             </el-form-item>
     </el-form>
     </el-card>
