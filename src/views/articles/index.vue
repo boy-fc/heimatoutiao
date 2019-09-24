@@ -110,6 +110,7 @@ export default {
           url: `/articles/${id.toString()}`,
           method: 'delete'
         }).then(() => {
+          this.$message({ message: '删除成功', type: 'success' })
           this.queryArticles() // 带条件的查询
         })
       })

@@ -37,7 +37,7 @@ export default new Router({
         },
         // 跳转到编辑页面
         {
-          path: 'publish/:articlesId',
+          path: 'publish/:articleId',
           component: () => import('./views/publish')
         },
         // 发表文章

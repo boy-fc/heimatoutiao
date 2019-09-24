@@ -66,16 +66,26 @@ export default {
     }
   },
   methods: {
+    // 根据文章id获取文章内容
+    getArticledById (articleId) {
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then(result => {
+        this.formData = result.data
+      })
+    },
     // 发布文章
     publish (draft) {
       this.$refs.publishForm.validate((isOk) => {
+        let { articleId } = this.$route.params
         this.$axios({
-          url: '/articles',
-          method: 'post',
+          url: articleId ? `/articles/${articleId}` : '/articles',
+          method: articleId ? 'put' : 'post',
           params: { draft }, // draft为true时是草稿
           data: this.formData
         }).then(() => {
           // 发布成功时
+          this.$message({ message: articleId ? '修改成功' : '发表成功', type: 'success' })
           this.$router.push('/home/articles')
         })
       })
@@ -90,7 +100,11 @@ export default {
     }
   },
   created () {
+    // 获取文章频道
     this.getChannels()
+    // 根据文章id获取文章内容
+    let { articleId } = this.$route.params
+    this.getArticledById(articleId)
   }
 }
 </script>
