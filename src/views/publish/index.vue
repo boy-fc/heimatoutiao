@@ -17,7 +17,7 @@
             </el-form-item>
             <!-- 封面 -->
             <el-form-item label="封面" prop="cover" style="margin-top:120px">
-                <el-radio-group v-model="formData.cover.type">
+                <el-radio-group v-model="formData.cover.type" @change='changeType'>
                     <el-radio :label="1">单选</el-radio>
                     <el-radio :label="3">三图</el-radio>
                     <el-radio :label="0">无图</el-radio>
@@ -66,6 +66,21 @@ export default {
     }
   },
   methods: {
+    // 图片类型改变事件
+    changeType () {
+      // 根据type进行对images长度的变化
+      // - type == 0 => images => []
+      // - type==1 =>images=> [一个字符串] =》 字符串是封面的图片地址
+      // - type==3 => images => [3个字符串] =》 字符串是封面的图片地址
+      // - type==-1 => images => [可有可无] =》 归为无
+      if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']
+      } else {
+        this.formData.cover.images = []
+      }
+    },
     // 根据文章id获取文章内容
     getArticledById (articleId) {
       this.$axios({
