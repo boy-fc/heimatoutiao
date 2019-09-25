@@ -25,7 +25,7 @@
                 </el-radio-group>
             </el-form-item>
             <!-- 封面组件 传递父组件的images到子组件中-->
-            <cover-image :images='formData.cover.images'></cover-image>
+            <cover-image :images='formData.cover.images' @selectImg='changeImg'></cover-image>
             <!-- 频道选择 -->
             <el-form-item label="频道" prop="channel_id">
                 <el-select v-model="formData.channel_id">
@@ -68,6 +68,10 @@ export default {
     }
   },
   methods: {
+    // 接受子组件传递的地址
+    changeImg (url, index) {
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
+    },
     // 图片类型改变事件
     changeType () {
       // 根据type进行对images长度的变化
