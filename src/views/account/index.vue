@@ -7,23 +7,23 @@
          <!-- 主体 -->
         <el-form style='margin-left:60px' label-width="100px">
             <el-form-item label="用户名：">
-                <el-input style="width:300px"></el-input>
+                <el-input style="width:300px" v-model="formData.name"></el-input>
             </el-form-item>
             <el-form-item label="简介：">
-                <el-input style="width:300px"></el-input>
+                <el-input style="width:300px" v-model="formData.intro"></el-input>
             </el-form-item>
             <el-form-item label="邮箱：">
-                <el-input style="width:300px"></el-input>
+                <el-input style="width:300px" v-model="formData.email"></el-input>
             </el-form-item>
             <el-form-item label="手机号：">
-                <el-input style="width:300px" disabled></el-input>
+                <el-input style="width:300px" disabled v-model="formData.mobile"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary">保存信息</el-button>
             </el-form-item>
             <!-- 头像 -->
             <div class="header">
-                 <img src="../../assets/img/fc.jpg" alt="" >
+                 <img :src="formData.photo ? formData.photo : defaultImg" alt="" >
                  <el-button type="text">修改头像</el-button>
             </div>
 
@@ -33,7 +33,25 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      formData: {},
+      defaultImg: require('../../assets/img/fc.jpg')
+    }
+  },
+  methods: {
+    //   获取用户数据信息
+    getUserInfo () {
+      this.$axios({
+        url: '/user/profile'
+      }).then(result => {
+        this.formData = result.data
+      })
+    }
+  },
+  created () {
+    this.getUserInfo()
+  }
 }
 </script>
 
