@@ -25,7 +25,9 @@
 </template>
 
 <script>
-export default {
+import eventBus from '../../untils/eventBus'
+export default
+{
   data () {
     return {
       userInfo: {}, // 获取用户信息
@@ -60,6 +62,10 @@ export default {
   // 钩子函数
   created () {
     this.getUserInfo()
+    // 一旦监听到事件就会执行后面的函数
+    eventBus.$on('updateUserInfo', () => {
+      this.getUserInfo()
+    })
   }
 }
 </script>

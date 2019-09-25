@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import eventBus from '../../untils/eventBus'
 export default {
   data () {
     return {
@@ -72,6 +73,7 @@ export default {
         method: 'patch',
         data
       }).then(result => {
+        eventBus.$emit('updateUserInfo')// 抛出一个事件
         this.formData.photo = result.data.photo // 成功上传的头像更新给当前的页面数据
         this.loading = false
       })
@@ -93,6 +95,8 @@ export default {
           method: 'patch',
           data: this.formData
         }).then(() => {
+          // 提示别的组件更新数据
+          eventBus.$emit('updateUserInfo')// 抛出一个事件
           this.$message({
             message: '保存成功',
             type: 'success'
@@ -127,28 +131,9 @@ export default {
         width: 100%;
         height: 100%;
     }
+    .head-img{
+    width: 300px;
+    height: 300px;
+    }
 }
-.avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
 </style>
