@@ -1,5 +1,5 @@
 <template>
-    <el-card>
+    <el-card v-loading='loading'>
         <!-- 面包屑组件 -->
         <bread-crumb slot='header'>
             <template slot='title'>账户信息</template>
@@ -24,7 +24,14 @@
             <!-- 头像 -->
             <div class="header">
                 <img :src="formData.photo ? formData.photo : defaultImg" alt="" >
-                <el-button type="text">修改头像</el-button>
+                <el-button type="text" @click="dialogVisible = true">修改头像</el-button>
+                <!-- 弹层 -->
+                <el-dialog title="请点击上传头像" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+                     <!--上传  http-request-->
+                    <el-upload action="" :show-file-list="false" :http-request="uploadImg">
+                        <img class='head-img' :src="formData.photo ? formData.photo : defaultImg " alt="">
+                    </el-upload>
+                </el-dialog>
             </div>
 
         </el-form>
@@ -35,6 +42,9 @@
 export default {
   data () {
     return {
+      loading: false,
+      // 弹层
+      dialogVisible: false,
       formData: {},
       defaultImg: require('../../assets/img/fc.jpg'),
       //   表单校验
@@ -51,6 +61,21 @@ export default {
     }
   },
   methods: {
+    // 修改用户头像
+    uploadImg (params) {
+      this.dialogVisible = false
+      this.loading = true
+      let data = new FormData()
+      data.append('photo', params.file) // 取出文件放到参数中
+      this.$axios({
+        url: '/user/photo',
+        method: 'patch',
+        data
+      }).then(result => {
+        this.formData.photo = result.data.photo // 成功上传的头像更新给当前的页面数据
+        this.loading = false
+      })
+    },
     //   获取用户数据信息
     getUserInfo () {
       this.$axios({
@@ -74,6 +99,13 @@ export default {
           })
         })
       })
+    },
+    // 弹层关闭
+    handleClose (done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        }).catch(_ => {})
     }
   },
   created () {
@@ -96,4 +128,27 @@ export default {
         height: 100%;
     }
 }
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
