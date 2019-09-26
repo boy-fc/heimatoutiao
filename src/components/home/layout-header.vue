@@ -6,7 +6,7 @@
                   <span>江苏传智播客教育科技股份有限公司</span>
                 </el-col>
                 <!-- 头部右侧 -->
-                <el-col :span="3" class="right">
+                <el-col :span="4" class="right">
                   <el-dropdown trigger="click" @command="commonClick">
                       <!-- 匿名插槽 -->
                     <span class="el-dropdown-link">
@@ -84,6 +84,7 @@ export default
         line-height: 60px;
         .head-img{
           width: 35px;
+          height: 35px;
           border-radius: 15px;
           vertical-align: middle;
           margin-right: 10px;
