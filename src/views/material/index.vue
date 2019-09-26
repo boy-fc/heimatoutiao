@@ -56,45 +56,40 @@ export default {
   },
   methods: {
     // 收藏图片------------------------------------------------
-    collectPic (item) {
+    async collectPic (item) {
       let mess = item.is_collected ? '取消' : ''
-      this.$confirm(`您确定要${mess}收藏该图片？`).then(() => {
-        this.loading = true
-        this.$axios({
-          url: `/user/images/${item.id}`,
-          method: 'put',
-          data: { collect: !item.is_collected }
-        }).then(() => {
-          this.getMaterial()
-          this.loading = false
-        })
+      await this.$confirm(`您确定要${mess}收藏该图片？`)
+      this.loading = true
+      await this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: { collect: !item.is_collected }
       })
+      this.getMaterial()
+      this.loading = false
     },
     // 删除图片--------------------------------------------
-    deletePic (id) {
-      this.$confirm('您确定要删除该图片吗？').then(() => {
-        // 如果点击确定，调用删除接口
-        this.loading = true
-        this.$axios({
-          url: `/user/images/${id}`,
-          method: 'delete'
-        }).then(() => {
-          this.getMaterial()
-          this.loading = false
-        })
+    async deletePic (id) {
+      await this.$confirm('您确定要删除该图片吗？')
+      // 如果点击确定，调用删除接口
+      this.loading = true
+      await this.$axios({
+        url: `/user/images/${id}`,
+        method: 'delete'
       })
+      this.getMaterial()
+      this.loading = false
     },
     // 上传图片-------------------------------------------------
-    uploadImg (params) {
+    async uploadImg (params) {
       const data = new FormData() // 声明一个新的表单
       data.append('image', params.file)
-      this.$axios({
+      await this.$axios({
         url: '/user/images',
         method: 'post',
         data: data
-      }).then(() => {
-        this.getMaterial()
       })
+      this.getMaterial()
     },
     // 分页按钮
     changeCurrent (newpage) {
@@ -102,16 +97,15 @@ export default {
       this.getMaterial()
     },
     //   获取素材列表
-    getMaterial () {
+    async getMaterial () {
       // this.activeName === 'collect' 相当于去找收藏的数据
       // 如果不等于collect 相等于去找全部的数据
-      this.$axios({
+      let result = await this.$axios({
         url: '/user/images',
         params: { collect: this.activeName === 'collect', page: this.page.page_current, per_page: this.page.pagesizes }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count
     }
   },
   created () {

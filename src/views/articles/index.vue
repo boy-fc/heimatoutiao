@@ -102,18 +102,16 @@ export default {
       this.$router.push(`/home/publish/${id.toString()}`)
     },
     //   删除事件------------------------
-    delArticles (id) {
-      this.$confirm('您确定要删除此文章吗').then(() => {
-        // id超过了安全数字限制 被jsonbigint转成了bigNUmber类型 要想变成字符串
-        // id.toString()
-        this.$axios({
-          url: `/articles/${id.toString()}`,
-          method: 'delete'
-        }).then(() => {
-          this.$message({ message: '删除成功', type: 'success' })
-          this.queryArticles() // 带条件的查询
-        })
+    async delArticles (id) {
+      await this.$confirm('您确定要删除此文章吗')
+      // id超过了安全数字限制 被jsonbigint转成了bigNUmber类型 要想变成字符串
+      // id.toString()
+      await this.$axios({
+        url: `/articles/${id.toString()}`,
+        method: 'delete'
       })
+      this.$message({ message: '删除成功', type: 'success' })
+      this.queryArticles() // 带条件的查询
     },
     //   分页改变事件
     changePage (newPage) {
@@ -142,22 +140,20 @@ export default {
       this.getArticles(params)
     },
     // 获取频道选择器数据------------------------------------------------------
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      let result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
     },
     //   获取文章列表----------------------------------------------------------
-    getArticles (params) {
-      this.$axios({
+    async getArticles (params) {
+      let result = await this.$axios({
         url: '/articles',
         params
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count // 赋值记录总数
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count // 赋值记录总数
     }
   },
   //   钩子函数-----------------------------------------------------------------

@@ -63,45 +63,41 @@ export default {
   },
   methods: {
     // 修改用户头像
-    uploadImg (params) {
+    async uploadImg (params) {
       this.dialogVisible = false
       this.loading = true
       let data = new FormData()
       data.append('photo', params.file) // 取出文件放到参数中
-      this.$axios({
+      let result = await this.$axios({
         url: '/user/photo',
         method: 'patch',
         data
-      }).then(result => {
-        eventBus.$emit('updateUserInfo')// 抛出一个事件
-        this.formData.photo = result.data.photo // 成功上传的头像更新给当前的页面数据
-        this.loading = false
       })
+      eventBus.$emit('updateUserInfo')// 抛出一个事件
+      this.formData.photo = result.data.photo // 成功上传的头像更新给当前的页面数据
+      this.loading = false
     },
     //   获取用户数据信息
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      let result = await this.$axios({
         url: '/user/profile'
-      }).then(result => {
-        this.formData = result.data
       })
+      this.formData = result.data
     },
     // 保存信息
-    saveUser () {
+    async saveUser () {
       // 校验整个表单
-      this.$refs.accountForm.validate((isOk) => {
-        this.$axios({
-          url: '/user/profile',
-          method: 'patch',
-          data: this.formData
-        }).then(() => {
-          // 提示别的组件更新数据
-          eventBus.$emit('updateUserInfo')// 抛出一个事件
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
-        })
+      await this.$refs.accountForm.validate()
+      await this.$axios({
+        url: '/user/profile',
+        method: 'patch',
+        data: this.formData
+      })
+      // 提示别的组件更新数据
+      eventBus.$emit('updateUserInfo')// 抛出一个事件
+      this.$message({
+        message: '保存成功',
+        type: 'success'
       })
     },
     // 弹层关闭

@@ -54,18 +54,16 @@ export default {
       this.getComment()
     },
     //   评论打开或者关闭事件
-    closeOrOpen (row) {
+    async closeOrOpen (row) {
       let mess = row.comment_status ? '关闭' : '打开'
-      this.$confirm(`您确定要${mess}评论吗？`).then(() => {
-        this.$axios({
-          url: 'comments/status',
-          method: 'put',
-          params: { article_id: row.id.toString() }, // 路径参数
-          data: { allow_comment: !row.comment_status }
-        }).then(() => {
-          this.getComment()
-        })
+      await this.$confirm(`您确定要${mess}评论吗？`)
+      await this.$axios({
+        url: 'comments/status',
+        method: 'put',
+        params: { article_id: row.id.toString() }, // 路径参数
+        data: { allow_comment: !row.comment_status }
       })
+      this.getComment()
     },
     //   格式化数据
     stateFormatter (row, column, cellValue, index) {
@@ -73,17 +71,16 @@ export default {
     },
 
     //   获取数据列表
-    getComment () {
+    async getComment () {
       this.loading = true
-      this.$axios({
+      let result = await this.$axios({
         url: '/articles',
         // params 是路径参数也就是 query参数
         params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
-      }).then(result => {
-        this.tableData = result.data.results
-        this.page.total = result.data.total_count // 把总条数给分页组件的总条数
-        this.loading = false
       })
+      this.tableData = result.data.results
+      this.page.total = result.data.total_count // 把总条数给分页组件的总条数
+      this.loading = false
     }
   },
   created () {
