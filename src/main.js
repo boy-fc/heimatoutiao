@@ -7,7 +7,7 @@ import Component from './components' // 引入插件对象
 import 'element-ui/lib/theme-chalk/index.css' // 引入样式
 import './styles/index.less'
 // import axios from 'axios'
-import axios from './untils/axios-config'
+import axios from './untils/axios.config'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)

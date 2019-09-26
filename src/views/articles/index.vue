@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { getArticles, getChannels, delArticles } from '../../api/articles'
 export default {
   data () {
     return {
@@ -106,10 +107,7 @@ export default {
       await this.$confirm('您确定要删除此文章吗')
       // id超过了安全数字限制 被jsonbigint转成了bigNUmber类型 要想变成字符串
       // id.toString()
-      await this.$axios({
-        url: `/articles/${id.toString()}`,
-        method: 'delete'
-      })
+      await delArticles(id)
       this.$message({ message: '删除成功', type: 'success' })
       this.queryArticles() // 带条件的查询
     },
@@ -141,17 +139,12 @@ export default {
     },
     // 获取频道选择器数据------------------------------------------------------
     async getChannels () {
-      let result = await this.$axios({
-        url: '/channels'
-      })
+      let result = await getChannels()
       this.channels = result.data.channels
     },
     //   获取文章列表----------------------------------------------------------
     async getArticles (params) {
-      let result = await this.$axios({
-        url: '/articles',
-        params
-      })
+      let result = await getArticles(params)
       this.list = result.data.results
       this.page.total = result.data.total_count // 赋值记录总数
     }
